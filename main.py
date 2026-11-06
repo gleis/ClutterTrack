@@ -32,7 +32,8 @@ def cli():
     type=float,
     help="Minimum YOLO detection confidence",
 )
-def scan(image, room, db, conf):
+@click.option("--model", default="yolo11n.pt", show_default=True, help="YOLO weights name or local path")
+def scan(image, room, db, conf, model):
     """Scan IMAGE and record detected objects to the tracking database.
 
     Run this command repeatedly over days/weeks to build usage history.
@@ -40,11 +41,10 @@ def scan(image, room, db, conf):
     click.echo(f"Scanning '{image}' for room '{room}'...")
 
     tracker = ClutterTracker(db)
-    detections = detect(image, conf_threshold=conf)
+    detections = detect(image, conf_threshold=conf, model_name=model)
 
     if not detections:
         click.echo("No objects detected. Try a clearer photo or lower --conf.")
-        return
 
     session_id = tracker.record_scan(image, room, detections)
 
@@ -164,6 +164,17 @@ def reset(room, db):
     tracker.clear(room)
     target = f"room '{room}'" if room else "all rooms"
     click.echo(f"Cleared tracking data for {target}.")
+
+
+@cli.command()
+@click.option("--room", default="default", show_default=True)
+@click.option("--db", default=str(DEFAULT_DB), show_default=True)
+@click.option("--output", type=click.Path(path_type=Path), default=Path("clutter-report.html"))
+def report(room, db, output):
+    """Export a room's scan trend and photo paths to a standalone HTML page."""
+    from report import render_report
+    output.write_text(render_report(ClutterTracker(db), room), encoding="utf-8")
+    click.echo(f"Wrote {output}")
 
 
 if __name__ == "__main__":

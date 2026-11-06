@@ -1,4 +1,4 @@
-"""Object detection using YOLOv8."""
+"""Object detection using YOLO11."""
 from dataclasses import dataclass
 from typing import List
 
@@ -15,26 +15,26 @@ class Detection:
     y_center: float
 
 
-_model_cache = None
+_model_cache = {}
 
 
-def _get_model():
+def _get_model(model_name: str = "yolo11n.pt"):
     global _model_cache
-    if _model_cache is None:
+    if model_name not in _model_cache:
         try:
             from ultralytics import YOLO
         except ImportError:
             raise ImportError("ultralytics not installed. Run: pip install ultralytics")
-        _model_cache = YOLO("yolov8n.pt")  # nano model, auto-downloads on first use
-    return _model_cache
+        _model_cache[model_name] = YOLO(model_name)  # nano model, auto-downloads on first use
+    return _model_cache[model_name]
 
 
-def detect(image_path: str, conf_threshold: float = 0.25) -> List[Detection]:
-    """Detect objects in an image using YOLOv8.
+def detect(image_path: str, conf_threshold: float = 0.25, model_name: str = "yolo11n.pt") -> List[Detection]:
+    """Detect objects in an image using YOLO11.
 
     Returns a list of Detection objects with normalized coordinates [0, 1].
     """
-    model = _get_model()
+    model = _get_model(model_name)
     results = model(image_path, conf=conf_threshold, verbose=False)
 
     detections = []

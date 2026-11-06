@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cluttertrack"
+version = "0.1.0"
+description = "Local room scan history and decluttering signals"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = ["click>=8.1", "pillow>=10", "opencv-python>=4.8", "ultralytics>=8.3"]
+
+[project.scripts]
+cluttertrack = "main:cli"
+
+[project.optional-dependencies]
+test = ["pytest>=9.0.3"]
+
+[tool.setuptools]
+py-modules = ["main", "detector", "tracker", "analyzer", "report"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

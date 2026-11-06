@@ -93,3 +93,7 @@ The default database path is `~/.clutter_track.db`. Pass `--db` to any command t
 The first scan may take longer because `ultralytics` downloads the YOLOv8n model. The model file is ignored by git so local downloads do not get committed.
 
 Generated files such as `__pycache__/`, `.DS_Store`, local databases, virtual environments, and downloaded model weights are intentionally ignored.
+
+## Maintenance (2026-11-06)
+
+Requires Python 3.12+. Install `pip install --require-hashes -r requirements.lock`, then `pip install --no-deps -e .`. Run `pytest`. The `scan --model yolo11n.pt` default uses YOLO11 nano; choose another trusted weights file with `--model`. Existing `--room` and photo paths are retained. `cluttertrack report --room office --output office.html` exports scan counts and presence trends. Empty detections now count as scans.
