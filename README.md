@@ -1,10 +1,10 @@
 # ClutterTrack
 
-ClutterTrack is a local command-line tool for tracking what appears in a room over time. It uses YOLOv8 object detection on room photos, stores scan history in SQLite, and turns frequency and recency patterns into practical decluttering suggestions.
+ClutterTrack is a local command-line tool for tracking what appears in a room over time. It uses YOLO11 object detection on room photos, stores scan history in SQLite, and turns frequency and recency patterns into practical decluttering suggestions.
 
 ## What It Does
 
-- Scans room photos with YOLOv8n object detection.
+- Scans room photos with YOLO11n object detection.
 - Records each scan as a timestamped session.
 - Stores detected object labels, confidence, and normalized positions in SQLite.
 - Summarizes how often each object appears and when it was last seen.
@@ -14,14 +14,14 @@ ClutterTrack is a local command-line tool for tracking what appears in a room ov
 
 - Python 3.10 or newer
 - A local Python virtual environment
-- Internet access the first time YOLOv8 downloads `yolov8n.pt`
+- Internet access the first time YOLO11 downloads `yolo11n.pt`
 
 ## Install
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install --require-hashes -r requirements.lock
 ```
 
 ## Usage
@@ -83,14 +83,14 @@ The default database path is `~/.clutter_track.db`. Pass `--db` to any command t
 ## Project Layout
 
 - `main.py`: Click CLI commands for scanning, analysis, history, and reset.
-- `detector.py`: YOLOv8 object detection wrapper.
+- `detector.py`: YOLO11 object detection wrapper.
 - `tracker.py`: SQLite persistence and aggregate queries.
 - `analyzer.py`: frequency, recency, and recommendation logic.
 - `requirements.txt`: Python runtime dependencies.
 
 ## Development Notes
 
-The first scan may take longer because `ultralytics` downloads the YOLOv8n model. The model file is ignored by git so local downloads do not get committed.
+The first scan may take longer because `ultralytics` downloads the YOLO11n model. The model file is ignored by git so local downloads do not get committed.
 
 Generated files such as `__pycache__/`, `.DS_Store`, local databases, virtual environments, and downloaded model weights are intentionally ignored.
 
